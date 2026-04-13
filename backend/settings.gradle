@@ -1,0 +1,10 @@
+rootProject.name = 'ocrgateway.nhli'
+
+include 'app-library-ocr-converter'
+include 'app-common-shared'
+include 'app-common-core'
+include 'app-domain-ocr-shared'
+include 'app-domain-ocr-core'   
+include 'app-claim'
+include 'app-etc'
+include 'app-inzisoft-jni'

@@ -1,0 +1,39 @@
+dependencies {
+    // implementation ('org.springframework.boot:spring-boot-starter-web:3.1.12') {
+    // }        
+    // implementation 'org.springframework.boot:spring-boot-starter-web:3.1.12'          // Spring MVC (Tomcat 포함)
+    implementation('org.springframework.boot:spring-boot-starter-web:3.1.12') {
+        exclude group: 'org.springframework.boot', module: 'spring-boot-starter-tomcat'
+    }
+    compileOnly 'jakarta.servlet:jakarta.servlet-api:5.0.0'
+    implementation 'org.springframework.boot:spring-boot-starter-webflux:3.1.12'            // Spring WebFlux 의존성 (Reactive Programming 지원)
+    implementation 'org.springframework.boot:spring-boot-starter-security:3.1.12'           // Spring Security 의존성 (보안 관련 기능 제공)
+    implementation 'org.springframework.boot:spring-boot-starter-logging:3.1.12'            // Spring의 로깅 기능을 위한 의존성
+    implementation 'org.springframework.boot:spring-boot-starter-aop:3.1.12'                // AOP 기능을 위한 의존성
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf:3.1.12'          // Thymeleaf 템플릿 엔진을 사용하기 위한 의존성
+    implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.3'              // MyBatis와 Spring Boot 통합을 위한 의존성
+    implementation 'org.apache.commons:commons-lang3:3.12.0'                                // Apache Commons Lang3 유틸리티 라이브러리
+
+    // 서블릿 API 추가
+    compileOnly 'jakarta.servlet:jakarta.servlet-api:6.0.0'
+
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.4'                      // Jackson 라이브러리 (JSON 데이터 바인딩 처리)
+    //implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.15.4'          // Jackson 라이브러리 (XML 포맷 처리)
+    implementation 'com.jayway.jsonpath:json-path:2.6.0'                                     // JSONPath 라이브러리 (JSON 데이터 내에서 경로 탐색)
+    implementation 'commons-io:commons-io:2.18.0'                                            // Commons IO 라이브러리 (입출력 관련 유틸리티 제공)
+    implementation 'com.google.guava:guava:31.1-jre'                                         // Google Guava 라이브러리 (컬렉션, 캐싱 등 유틸리티 제공)
+    implementation 'com.google.code.gson:gson:2.8.7'                                         // Gson 라이브러리 (JSON 직렬화/역직렬화 처리)
+    implementation 'org.apache.httpcomponents:httpclient:4.5.13'
+    implementation 'org.apache.commons:commons-csv:1.10.0'
+
+    implementation 'org.apache.tika:tika-core:3.2.3'
+    
+    annotationProcessor 'org.projectlombok:lombok:1.18.30'                                   // Lombok을 사용한 애노테이션 프로세서 (컴파일 타임에 코드 생성)
+    compileOnly 'org.projectlombok:lombok:1.18.30'                                           // Lombok 라이브러리 (코드 생성을 위한 의존성, 컴파일 전용)
+    
+    // developmentOnly 'org.springframework.boot:spring-boot-devtools:3.3.5'
+
+	implementation project(':app-library-ocr-converter')
+	implementation project(':app-common-shared')
+	implementation project(':app-domain-ocr-shared')
+    }
