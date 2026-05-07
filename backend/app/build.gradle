@@ -37,8 +37,6 @@ dependencies {
 
     developmentOnly 'org.springframework.boot:spring-boot-devtools:3.3.5'
 
-    compileOnly fileTree(dir: "${rootDir}/lib", include: ['*.jar'])
-
     implementation project(':app-library-ocr-converter')
     implementation project(':app-common-shared')
     implementation project(':app-common-core')
