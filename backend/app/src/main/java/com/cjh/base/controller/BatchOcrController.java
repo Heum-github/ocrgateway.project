@@ -11,15 +11,12 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/batch")
-public class BatchProcessController { // Contoller 오타 수정
+public class BatchOcrController {
 
-    // Logger의 대상 클래스를 현재 클래스인 BatchProcessController로 변경
-    private static final Logger logger = LoggerFactory.getLogger(BatchProcessController.class);
-
+    private static final Logger logger = LoggerFactory.getLogger(BatchOcrController.class);
     private final FileParsingService parser;
 
-    // 생성자를 통한 Service 의존성 주입 (Spring 4.3 이상에서는 @Autowired 생략 가능)
-    public BatchProcessController(FileParsingService parser) {
+    public BatchOcrController(FileParsingService parser) {
         this.parser = parser;
     }
 
@@ -27,14 +24,13 @@ public class BatchProcessController { // Contoller 오타 수정
     public String uploadImageKeys(@RequestParam("file") MultipartFile file) {
         logger.info("배치 파일 업로드 요청 수신. 파일명: {}", file.getOriginalFilename());
 
-        // 1. 파일 존재 여부 검증
         if (file.isEmpty()) {
             logger.warn("업로드된 파일이 비어 있습니다.");
             return "Fail: 파일이 비어있습니다.";
         }
 
         try {
-            // 2. Service를 호출하여 파일 파싱 진행
+            // 2. 파일 파싱 - 이미지키 추출
             List<String> imageKeys = parser.parseImageKeyFile(file);
             logger.info("성공적으로 파싱된 이미지 키 개수: {} 건", imageKeys.size());
 

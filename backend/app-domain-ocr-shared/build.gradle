@@ -5,11 +5,14 @@ dependencies {
     }
     compileOnly 'jakarta.servlet:jakarta.servlet-api:5.0.0'
 	implementation 'org.springframework.boot:spring-boot-starter-logging:3.1.12'            // Spring의 로깅 기능을 위한 의존성
-    implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.3'              // MyBatis 연동
     implementation 'org.apache.commons:commons-lang3:3.12.0'                                // Apache Commons Lang3 유틸리티 라이브러리
     annotationProcessor 'org.projectlombok:lombok:1.18.30'                                  // Lombok을 사용한 애노테이션 프로세서 (컴파일 타임에 코드 생성)
     compileOnly 'org.projectlombok:lombok:1.18.30'                                          // Lombok 라이브러리 (코드 생성을 위한 의존성, 컴파일 전용)
     // developmentOnly 'org.springframework.boot:spring-boot-devtools:3.3.5'
+    
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'                   // JPA 설정 
+    
+    implementation 'org.mariadb.jdbc:mariadb-java-client'                                    // MariaDB 드라이버
     
     implementation project(':app-common-shared')
 }

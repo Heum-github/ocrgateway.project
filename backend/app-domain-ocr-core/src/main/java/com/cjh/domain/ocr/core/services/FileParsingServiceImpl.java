@@ -4,7 +4,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.cjh.common.shared.utils.PathUtils;
 import com.cjh.domain.ocr.core.interfaces.FileParsingService;
+
+import ch.qos.logback.core.util.FileUtil;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -51,12 +54,8 @@ public class FileParsingServiceImpl implements FileParsingService{
             throw new IllegalArgumentException("파일명이 존재하지 않습니다.");
         }
 
-        // 확장자 추출
-        String extension = "";
-        int dotIndex = filename.lastIndexOf('.');
-        if (dotIndex > 0 && dotIndex < filename.length() - 1) {
-            extension = filename.substring(dotIndex + 1).toLowerCase();
-        }
+        // PathUtils(Apache Commons IO)를 사용하여 확장자 추출 (코드가 한 줄로 획기적으로 줄어듦)
+        String extension = PathUtils.extractExtension(filename).toLowerCase();
 
         if (!ALLOWED_EXTENSIONS.contains(extension)) {
             throw new IllegalArgumentException("지원하지 않는 파일 형식입니다. 허용되는 확장자: " + ALLOWED_EXTENSIONS);

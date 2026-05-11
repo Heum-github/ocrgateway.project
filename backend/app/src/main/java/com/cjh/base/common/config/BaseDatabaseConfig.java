@@ -1,70 +1,69 @@
 package com.cjh.base.common.config;
 
 import java.sql.SQLException;
-
 import javax.sql.DataSource;
 
-import org.apache.ibatis.session.ExecutorType;
-import org.apache.ibatis.session.SqlSessionFactory;
-import org.mybatis.spring.SqlSessionFactoryBean;
-import org.mybatis.spring.SqlSessionTemplate;
-import org.mybatis.spring.annotation.MapperScan;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 import com.cjh.domain.ocr.core.constants.OcrDomainConstants;
+import com.cjh.domain.ocr.core.interfaces.FileParsingService;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
 @Configuration
-@MapperScan(basePackages = {
-    "com.fdx.common.core.mapper",
-    "com.fdx.domain.ocr.core.mapper"
+// 1. MapperScan 대신 EnableJpaRepositories를 사용하여 JPA 리포지토리 위치를 지정합니다.
+@EnableJpaRepositories(basePackages = {
+    "com.fdx.common.core.repository",
+    "com.fdx.domain.ocr.core.repository"
+})
+// 2. Entity 객체들이 위치한 패키지를 스캔하도록 지정합니다.
+@EntityScan(basePackages = {
+    "com.fdx.common.core.entity",
+    "com.fdx.domain.ocr.core.entity"
 })
 public class BaseDatabaseConfig {
 
-    @Autowired
-	private BaseDatabaseSetting _setting;
+    private BaseDatabaseSetting setting;
 
-    // 멀티모듈 전체의 mapper/**/*.xml을 모두 스캔하도록 변경
-    private static final String MAPPER_LOCATION = "classpath*:mapper/**/**.xml";
+    public BaseDatabaseConfig(BaseDatabaseSetting setting) {
+        this.setting = setting;
+    }
+
+    // XML 로케이션 변수 삭제됨 (MAPPER_LOCATION)
 
     @Primary
     @Bean(name = "dataSource")
     public DataSource dataSource() throws Exception {
-
         try {
-
             HikariConfig hikariConfig = new HikariConfig();
-            hikariConfig.setDriverClassName(_setting.getDriverClassName());
-            hikariConfig.setJdbcUrl(_setting.getUrl());
-            hikariConfig.setUsername(_setting.getUsername());
-            hikariConfig.setPassword(_setting.getPassword());
+            hikariConfig.setDriverClassName(setting.getDriverClassName());
+            hikariConfig.setJdbcUrl(setting.getUrl());
+            hikariConfig.setUsername(setting.getUsername());
+            hikariConfig.setPassword(setting.getPassword());
             
-            hikariConfig.setMaximumPoolSize(_setting.getHikari().getMaximumPoolSize());
-            hikariConfig.setMinimumIdle(_setting.getHikari().getMinimumIdle());
-            hikariConfig.setConnectionTimeout(_setting.getHikari().getConnectionTimeout());
-            hikariConfig.setIdleTimeout(_setting.getHikari().getIdleTimeout());
-            hikariConfig.setMaxLifetime(_setting.getHikari().getMaxLifetime());
+            hikariConfig.setMaximumPoolSize(setting.getHikari().getMaximumPoolSize());
+            hikariConfig.setMinimumIdle(setting.getHikari().getMinimumIdle());
+            hikariConfig.setConnectionTimeout(setting.getHikari().getConnectionTimeout());
+            hikariConfig.setIdleTimeout(setting.getHikari().getIdleTimeout());
+            hikariConfig.setMaxLifetime(setting.getHikari().getMaxLifetime());
             hikariConfig.setPoolName("collection-pool");
             hikariConfig.setInitializationFailTimeout(-1);
 
             HikariDataSource ds = new HikariDataSource(hikariConfig);
 
-            // 여기까지 왔으면 일단 "생성 성공"이므로 true로 올림(원하면)
-
+            // DB Health 상태 래핑 로직 유지
             return healthWrapped(ds);
 
         } catch (Exception e) {
-            return failingDataSource("Hikari DataSource init failed: " + _setting.getUrl(), e);
+            return failingDataSource("Hikari DataSource init failed: " + setting.getUrl(), e);
         }
     }
 
     private DataSource failingDataSource(String message, Exception cause) {
-        // DB 문제 발생 시 플래그 OFF
         OcrDomainConstants.DB.DATABASE_CONNECT_HEALTH.set(false);
 
         return new org.springframework.jdbc.datasource.AbstractDataSource() {
@@ -110,24 +109,4 @@ public class BaseDatabaseConfig {
         };
     }
 
-    @Primary
-    @Bean
-    public SqlSessionFactory sqlSessionFactory(DataSource dataSource) throws Exception {
-        SqlSessionFactoryBean sessionFactory = new SqlSessionFactoryBean();
-        sessionFactory.setDataSource(dataSource);
-        PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
-        sessionFactory.setMapperLocations(resolver.getResources(MAPPER_LOCATION));
-        return sessionFactory.getObject();
-    }
-
-    @Primary
-    @Bean
-    public SqlSessionTemplate sqlSessionTemplate(SqlSessionFactory sqlSessionFactory) {
-        return new SqlSessionTemplate(sqlSessionFactory);
-    }
-
-    @Bean(name = "batchSqlSessionTemplate")
-    public SqlSessionTemplate batchSqlSessionTemplate(SqlSessionFactory sqlSessionFactory) {
-        return new SqlSessionTemplate(sqlSessionFactory, ExecutorType.BATCH);
-    }
 }

@@ -16,7 +16,6 @@ dependencies {
     implementation 'commons-io:commons-io:2.18.0'                                            // Commons IO 라이브러리 (입출력 관련 유틸리티 제공)
     implementation 'com.google.guava:guava:31.1-jre'                                         // Google Guava 라이브러리 (컬렉션, 캐싱 등 유틸리티 제공)
 
-    implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:3.3.0'                  // Thymeleaf 레이아웃 다이얼로그 확장 라이브러리
     implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.5'               // Jasypt 라이브러리 (Spring Boot에서의 암호화 처리)
     implementation 'io.jsonwebtoken:jjwt-api:0.12.6'                                         // JJWT (Java JSON Web Token) 라이브러리
     implementation 'com.github.mwiede:jsch:0.2.18'                                           // JSch 라이브러리 (Java Secure Channel)

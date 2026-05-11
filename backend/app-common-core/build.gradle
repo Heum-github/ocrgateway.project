@@ -4,8 +4,6 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-security'            // Spring Security 의존성 (보안 관련 기능 제공)
     implementation 'org.springframework.boot:spring-boot-starter-logging'             // Spring의 로깅 기능을 위한 의존성
     implementation 'org.springframework.boot:spring-boot-starter-aop'                 // AOP 기능을 위한 의존성
-    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'           // Thymeleaf 템플릿 엔진을 사용하기 위한 의존성
-    implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.3'              // MyBatis와 Spring Boot 통합을 위한 의존성
     implementation 'org.apache.commons:commons-lang3:3.12.0'                                // Apache Commons Lang3 유틸리티 라이브러리
 
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.4'                      // Jackson 라이브러리 (JSON 데이터 바인딩 처리)

@@ -11,7 +11,6 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-logging:3.1.12'            // Spring의 로깅 기능을 위한 의존성
     implementation 'org.springframework.boot:spring-boot-starter-aop:3.1.12'                // AOP 기능을 위한 의존성
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf:3.1.12'          // Thymeleaf 템플릿 엔진을 사용하기 위한 의존성
-    implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.3'              // MyBatis와 Spring Boot 통합을 위한 의존성
     implementation 'org.apache.commons:commons-lang3:3.12.0'                                // Apache Commons Lang3 유틸리티 라이브러리
 
     // 서블릿 API 추가
@@ -28,6 +27,11 @@ dependencies {
 
     implementation 'org.apache.tika:tika-core:3.2.3'
     
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'                   // JPA 설정 
+    
+    implementation 'org.mariadb.jdbc:mariadb-java-client'                                    // MariaDB 드라이버
+    
+
     annotationProcessor 'org.projectlombok:lombok:1.18.30'                                   // Lombok을 사용한 애노테이션 프로세서 (컴파일 타임에 코드 생성)
     compileOnly 'org.projectlombok:lombok:1.18.30'                                           // Lombok 라이브러리 (코드 생성을 위한 의존성, 컴파일 전용)
     
