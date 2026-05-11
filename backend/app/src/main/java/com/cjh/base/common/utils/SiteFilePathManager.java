@@ -1,9 +1,9 @@
-package com.cjh.claim.common.utils;
+package com.cjh.base.common.utils;
 
 import java.nio.file.Path;
 import java.util.UUID;
 
-import com.cjh.claim.common.constants.SiteConstants;
+import com.cjh.base.common.constants.SiteConstants;
 import com.cjh.common.shared.constants.CommonSiteConstants;
 import com.cjh.common.shared.utils.DateTimeUtils;
 import com.cjh.common.shared.utils.PathUtils;

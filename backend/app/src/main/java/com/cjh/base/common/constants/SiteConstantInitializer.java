@@ -1,4 +1,4 @@
-package com.cjh.claim.common.constants;
+package com.cjh.base.common.constants;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;

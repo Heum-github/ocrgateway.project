@@ -1,4 +1,4 @@
-package com.cjh.claim.common.aspect;
+package com.cjh.base.common.aspect;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

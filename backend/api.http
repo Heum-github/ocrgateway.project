@@ -1,16 +1,35 @@
 ### API명
 ### - 헬스체크
-### 서버구분
-### - OCR 게이트웨이 배치
-### API설명
-### - 서버의 상태를 확인하기 위한 헬스 체크 API
-### 프로세스
-### - 1. API 호출 시 HTTP 200 코드와 페이로드에 "OK" 문자열을 응답으로 반환
-### 연계시스템
-### - 해당 없음 (N/A)
-### 참고
-### -해당 없음 (N/A)
 GET http://localhost:9998/health HTTP/1.1
+
+
+### 
+POST http://localhost:9082/api/batch/upload-keys HTTP/1.1
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+Authorization: 
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="file"; filename="test_image_keys.csv"
+Content-Type: text/csv
+
+< d:\test_image_keys.csv
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ### API명
 ### - 파일업로드 처리 예시

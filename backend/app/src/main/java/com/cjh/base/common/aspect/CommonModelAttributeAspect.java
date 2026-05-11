@@ -1,4 +1,4 @@
-package com.cjh.claim.common.aspect;
+package com.cjh.base.common.aspect;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -20,7 +20,7 @@ import com.cjh.common.shared.utils.UserSessionUtils;
 @Component
 public class CommonModelAttributeAspect {
 
-    @Before("within(@org.springframework.stereotype.Controller *) && @annotation(com.cjh.claim.common.aspect.CommonModelAttribute)")
+    @Before("within(@org.springframework.stereotype.Controller *) && @annotation(com.cjh.base.common.aspect.CommonModelAttribute)")
     public void addCommonModelAttributes(JoinPoint joinPoint) {
 
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();

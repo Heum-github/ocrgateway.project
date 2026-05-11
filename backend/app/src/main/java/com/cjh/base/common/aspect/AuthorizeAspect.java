@@ -1,4 +1,4 @@
-package com.cjh.claim.common.aspect;
+package com.cjh.base.common.aspect;
 
 
 import org.aspectj.lang.ProceedingJoinPoint;

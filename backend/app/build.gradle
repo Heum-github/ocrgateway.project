@@ -51,7 +51,7 @@ bootJar {
     manifest {
         attributes(
             'Main-Class':'org.springframework.boot.loader.launch.PropertiesLauncher',
-            'Start-Class':'com.cjh.claim.BaseApplication'
+            'Start-Class':'com.cjh.base.BaseApplication'
         )
     }
 }

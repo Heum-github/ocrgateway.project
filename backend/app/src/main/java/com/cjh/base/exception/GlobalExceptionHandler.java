@@ -1,4 +1,4 @@
-package com.cjh.claim.exception;
+package com.cjh.base.exception;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

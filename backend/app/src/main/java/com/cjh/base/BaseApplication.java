@@ -1,4 +1,4 @@
-package com.cjh.claim;
+package com.cjh.base;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

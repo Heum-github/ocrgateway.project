@@ -1,4 +1,4 @@
-package com.cjh.claim.controller;
+package com.cjh.base.controller;
 
 import java.util.Map;
 

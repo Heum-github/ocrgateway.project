@@ -1,4 +1,4 @@
-package com.cjh.claim.common.constants;
+package com.cjh.base.common.constants;
 
 public class SiteConstants {
     

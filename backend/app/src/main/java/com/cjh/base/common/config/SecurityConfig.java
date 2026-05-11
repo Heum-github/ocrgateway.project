@@ -1,4 +1,4 @@
-package com.cjh.claim.common.config;
+package com.cjh.base.common.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
