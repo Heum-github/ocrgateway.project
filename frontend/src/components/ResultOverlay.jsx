@@ -2,9 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { X } from 'lucide-react';
 import { getOcrResult } from '../api/client';
 
-/**
- * 절대 좌표를 이용한 바운딩 박스 표시 컴포넌트
- */
 export default function ResultOverlay({ isOpen, onClose, imageKey }) {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -19,20 +16,15 @@ export default function ResultOverlay({ isOpen, onClose, imageKey }) {
   const fetchResult = async () => {
     setLoading(true);
     try {
-      // Mock data replacement for API: await getOcrResult(imageKey);
-      await new Promise(resolve => setTimeout(resolve, 600));
-      setData({
-        imageUrl: "https://images.unsplash.com/photo-1559811814-e2c56a5c192b?q=80&w=800&auto=format&fit=crop", // placeholder document structure
-        imageWidth: 800,
-        imageHeight: 1000,
-        layoutData: [
-          { id: '1', text: 'INVOICE NUMBER: 00123', confidence: 0.99, boundingBox: [50, 100, 350, 150] },
-          { id: '2', text: 'TOTAL AMOUNT: $4,500.00', confidence: 0.88, boundingBox: [50, 200, 400, 250] },
-          { id: '3', text: 'DATE: 2026-06-01', confidence: 0.95, boundingBox: [500, 100, 750, 150] }
-        ]
-      });
+      // 백엔드 실제 통신
+      const res = await getOcrResult(imageKey);
+      if (res.success) {
+        setData(res.data);
+      } else {
+        console.error("데이터 로드 실패:", res);
+      }
     } catch (e) {
-      console.error(e);
+      console.error("서버 통신 에러:", e);
     } finally {
       setLoading(false);
     }
@@ -73,9 +65,9 @@ export default function ResultOverlay({ isOpen, onClose, imageKey }) {
                   className="absolute inset-0 w-full h-full object-cover opacity-80"
                 />
                 
-                {/* SVG Overlay for drawing boxes using absolute pixel coordinates [x_min, y_min, x_max, y_max] */}
+                {/* SVG Overlay */}
                 <svg className="absolute inset-0 pointer-events-none" width={data.imageWidth} height={data.imageHeight}>
-                  {data.layoutData.map((box) => {
+                  {data.layoutData && data.layoutData.map((box) => {
                     const [x_min, y_min, x_max, y_max] = box.boundingBox;
                     const width = x_max - x_min;
                     const height = y_max - y_min;
@@ -120,7 +112,7 @@ export default function ResultOverlay({ isOpen, onClose, imageKey }) {
               <p className="text-xs text-slate-500 mt-1">상자를 클릭하거나 호버하여 확인하세요.</p>
             </div>
             <div className="flex-1 overflow-y-auto p-4 space-y-3">
-              {data?.layoutData.map(box => (
+              {data?.layoutData && data.layoutData.map(box => (
                 <div 
                   key={box.id} 
                   className={`p-3 rounded-xl border transition-all cursor-pointer ${hoveredBox === box.id ? 'border-indigo-400 bg-indigo-50 shadow-sm' : 'border-slate-100 hover:border-indigo-200 hover:bg-slate-50'}`}

@@ -8,36 +8,68 @@ import { cn } from '../utils/cn';
 export default function Dashboard() {
   const [isUploadOpen, setIsUploadOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
+  const [selectedBatchId, setSelectedBatchId] = useState(null);
   
-  // Mock Data State
-  const [stats, setStats] = useState({ total: 15420, processing: 340, completed: 15080 });
-  const [batches, setBatches] = useState([
-    { id: 'batch-001', name: '영수증_스캔본_2606.zip', status: 'COMPLETED', total: 500, done: 500, date: '2026-06-01 14:20' },
-    { id: 'batch-002', name: 'invoice_batch_june.csv', status: 'PROCESSING', total: 1000, done: 450, date: '2026-06-01 15:10' },
-    { id: 'batch-003', name: 'daily_upload_0601.txt', status: 'PENDING', total: 200, done: 0, date: '2026-06-01 15:30' }
-  ]);
-  const [items, setItems] = useState([
-    { key: 'IMG_4921.jpg', status: 'COMPLETED' },
-    { key: 'IMG_4922.jpg', status: 'COMPLETED' },
-    { key: 'IMG_4923.jpg', status: 'PROCESSING' },
-    { key: 'IMG_4924.jpg', status: 'PENDING' },
-  ]);
-
+  const [stats, setStats] = useState({ total: 0, processing: 0, completed: 0 });
+  const [batches, setBatches] = useState([]);
+  const [items, setItems] = useState([]);
   const [isPolling, setIsPolling] = useState(false);
 
-  // In real app, this would poll the getBatchItemStatus API
+  // 대시보드 진입 시 배치 목록 가져오기
   useEffect(() => {
-    let interval = setInterval(() => {
-      // Simulate real-time progress for batch-002
-      setBatches(prev => prev.map(b => {
-        if (b.status === 'PROCESSING' && b.done < b.total) {
-          return { ...b, done: b.done + Math.floor(Math.random() * 10) };
-        }
-        return b;
-      }));
-    }, 3000);
-    return () => clearInterval(interval);
+    fetchBatches();
   }, []);
+
+  // 특정 배치를 클릭하면 해당 아이템 목록 가져오기
+  useEffect(() => {
+    if (selectedBatchId) {
+      fetchBatchItems(selectedBatchId);
+    }
+  }, [selectedBatchId]);
+
+  const fetchBatches = async () => {
+    try {
+      const res = await getBatchStatus({ page: 0, size: 10, status: 'ALL' });
+      if (res.success) {
+        const content = res.data.content;
+        // Transform backend keys to match frontend if necessary, or just use as is
+        const mappedBatches = content.map(b => ({
+          id: b.batchId,
+          name: b.fileName,
+          status: b.status,
+          total: b.totalCount,
+          done: b.completedCount,
+          date: b.createdAt
+        }));
+        setBatches(mappedBatches);
+
+        // Update overall stats based on batches
+        let t = 0, p = 0, c = 0;
+        mappedBatches.forEach(b => {
+          t += b.total;
+          if (b.status === 'PROCESSING') p += (b.total - b.done);
+          c += b.done;
+        });
+        setStats({ total: t, processing: p, completed: c });
+      }
+    } catch (e) {
+      console.error("Failed to fetch batches", e);
+    }
+  };
+
+  const fetchBatchItems = async (batchId) => {
+    setIsPolling(true);
+    try {
+      const res = await getBatchItemStatus(batchId, { page: 0, size: 50 });
+      if (res.success && res.data.items) {
+        setItems(res.data.items);
+      }
+    } catch (e) {
+      console.error("Failed to fetch batch items", e);
+    } finally {
+      setIsPolling(false);
+    }
+  };
 
   const StatusBadge = ({ status }) => {
     const styles = {
@@ -118,15 +150,24 @@ export default function Dashboard() {
         <div className="lg:col-span-2 bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
           <div className="p-6 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
             <h2 className="text-xl font-bold text-slate-800">최근 배치 내역</h2>
-            <button className="text-indigo-600 hover:text-indigo-800 text-sm font-medium flex items-center gap-1 group">
+            <button onClick={fetchBatches} className="text-indigo-600 hover:text-indigo-800 text-sm font-medium flex items-center gap-1 group">
               <RefreshCw className="w-4 h-4 group-hover:rotate-180 transition-transform duration-500" />
               <span>새로고침</span>
             </button>
           </div>
           
           <div className="p-6 space-y-4">
-            {batches.map(batch => (
-              <div key={batch.id} className="p-5 border border-slate-100 rounded-2xl hover:border-indigo-100 hover:shadow-md transition-all bg-white group cursor-pointer">
+            {batches.length === 0 ? (
+              <p className="text-slate-500 text-center py-10">등록된 배치 내역이 없습니다.</p>
+            ) : batches.map(batch => (
+              <div 
+                key={batch.id} 
+                onClick={() => setSelectedBatchId(batch.id)}
+                className={cn(
+                  "p-5 border rounded-2xl hover:border-indigo-300 hover:shadow-md transition-all group cursor-pointer",
+                  selectedBatchId === batch.id ? "bg-indigo-50/30 border-indigo-400" : "bg-white border-slate-100"
+                )}
+              >
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center">
@@ -163,17 +204,24 @@ export default function Dashboard() {
 
         {/* Detailed Item List (Right side, takes 1 column) */}
         <div className="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden flex flex-col h-[600px]">
-          <div className="p-6 border-b border-slate-100 bg-slate-50/50">
-            <h2 className="text-lg font-bold text-slate-800">개별 이미지 처리 상태</h2>
-            <p className="text-sm text-slate-500 mt-1">배치 선택 시 상세 항목이 표시됩니다.</p>
+          <div className="p-6 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center">
+            <div>
+              <h2 className="text-lg font-bold text-slate-800">개별 이미지 상태</h2>
+              <p className="text-sm text-slate-500 mt-1">{selectedBatchId ? `배치: ${selectedBatchId}` : '배치를 선택해주세요.'}</p>
+            </div>
+            {isPolling && <Loader2 className="w-4 h-4 animate-spin text-indigo-500" />}
           </div>
           
           <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-slate-50/30">
-            {items.map((item, idx) => (
+            {items.length === 0 && !selectedBatchId ? (
+              <p className="text-center text-slate-400 py-10 text-sm">왼쪽 목록에서 배치를 선택하세요.</p>
+            ) : items.length === 0 ? (
+               <p className="text-center text-slate-400 py-10 text-sm">데이터를 가져오는 중이거나 없습니다.</p>
+            ) : items.map((item, idx) => (
               <div 
                 key={idx} 
                 onClick={() => {
-                  if(item.status === 'COMPLETED') setSelectedImage(item.key);
+                  if(item.status === 'COMPLETED') setSelectedImage(item.imageKey);
                 }}
                 className={cn(
                   "p-4 rounded-xl border flex items-center justify-between transition-all",
@@ -183,7 +231,7 @@ export default function Dashboard() {
                 <div className="flex items-center gap-3">
                   {item.status === 'COMPLETED' ? <CheckCircle2 className="w-5 h-5 text-emerald-500" /> : <Loader2 className="w-5 h-5 text-blue-500 animate-spin" />}
                   <span className={cn("font-medium text-sm", item.status === 'COMPLETED' ? "text-slate-800" : "text-slate-500")}>
-                    {item.key}
+                    {item.imageKey}
                   </span>
                 </div>
                 {item.status === 'COMPLETED' && (
@@ -200,7 +248,7 @@ export default function Dashboard() {
         isOpen={isUploadOpen} 
         onClose={() => setIsUploadOpen(false)} 
         onSuccess={() => {
-          // Trigger refresh of list
+          fetchBatches(); // Upload 완료 시 목록 갱신
         }}
       />
 

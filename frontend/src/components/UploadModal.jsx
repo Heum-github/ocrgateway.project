@@ -41,17 +41,19 @@ export default function UploadModal({ isOpen, onClose, onSuccess }) {
     if (!file) return;
     setIsUploading(true);
     try {
-      // API call using multipart/form-data
-      // const res = await uploadBatchKeys(file, "Batch Upload");
+      // 통신: 백엔드 API 실제 호출
+      const res = await uploadBatchKeys(file, "Batch Upload");
       
-      // Mocking for frontend demo
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      onSuccess?.();
-      onClose();
-      setFile(null);
+      if (res.success) {
+        onSuccess?.();
+        onClose();
+        setFile(null);
+      } else {
+        alert("업로드 실패: " + res.data);
+      }
     } catch (e) {
       console.error(e);
-      // handle error
+      alert("서버와의 통신에 실패했습니다.");
     } finally {
       setIsUploading(false);
     }

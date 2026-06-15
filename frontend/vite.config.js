@@ -8,4 +8,13 @@ export default defineConfig({
     react(),
     babel({ presets: [reactCompilerPreset()] })
   ],
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://localhost:9082', // Spring Boot default port
+        changeOrigin: true,
+        secure: false,
+      }
+    }
+  }
 })
