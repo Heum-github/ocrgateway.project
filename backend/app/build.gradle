@@ -24,6 +24,9 @@ dependencies {
     implementation 'org.yaml:snakeyaml:2.0'                                                  // SnakeYAML 라이브러리 (YAML 포맷 처리)   
 
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'                   // JPA 설정 
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'                 // Redis 설정
+    implementation 'org.springframework.boot:spring-boot-starter-amqp'                       // RabbitMQ 설정
+    implementation 'io.minio:minio:8.5.7'                                                    // MinIO SDK
     
     implementation 'org.mariadb.jdbc:mariadb-java-client'                                    // MariaDB 드라이버
     

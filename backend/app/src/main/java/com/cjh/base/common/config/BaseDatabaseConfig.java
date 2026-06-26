@@ -16,15 +16,9 @@ import com.zaxxer.hikari.HikariDataSource;
 
 @Configuration
 // 1. MapperScan 대신 EnableJpaRepositories를 사용하여 JPA 리포지토리 위치를 지정합니다.
-@EnableJpaRepositories(basePackages = {
-    "com.fdx.common.core.repository",
-    "com.fdx.domain.ocr.core.repository"
-})
+@EnableJpaRepositories(basePackages = {"com.cjh"})
 // 2. Entity 객체들이 위치한 패키지를 스캔하도록 지정합니다.
-@EntityScan(basePackages = {
-    "com.fdx.common.core.entity",
-    "com.fdx.domain.ocr.core.entity"
-})
+@EntityScan(basePackages = {"com.cjh"})
 public class BaseDatabaseConfig {
 
     private BaseDatabaseSetting setting;

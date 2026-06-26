@@ -1,4 +1,4 @@
-package com.cjh.base.dto;
+package com.cjh.domain.ocr.shared.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;

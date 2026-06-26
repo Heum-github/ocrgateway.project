@@ -41,7 +41,6 @@ export default function UploadModal({ isOpen, onClose, onSuccess }) {
     if (!file) return;
     setIsUploading(true);
     try {
-      // 통신: 백엔드 API 실제 호출
       const res = await uploadBatchKeys(file, "Batch Upload");
       
       if (res.success) {

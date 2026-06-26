@@ -1,9 +1,11 @@
 package com.cjh.base.controller;
 
-import com.cjh.base.dto.BatchItemStatusDto;
-import com.cjh.base.dto.BatchListResponseDto;
-import com.cjh.base.dto.BatchResponseDto;
 import com.cjh.domain.ocr.core.interfaces.FileParsingService;
+import com.cjh.domain.ocr.shared.dto.response.BatchItemStatusDto;
+import com.cjh.domain.ocr.shared.dto.response.BatchListResponseDto;
+import com.cjh.domain.ocr.shared.dto.response.BatchResponseDto;
+import com.cjh.base.service.BatchOcrService;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -23,9 +25,11 @@ public class BatchOcrController {
 
     private static final Logger logger = LoggerFactory.getLogger(BatchOcrController.class);
     private final FileParsingService parser;
+    private final BatchOcrService batchOcrService;
 
-    public BatchOcrController(FileParsingService parser) {
+    public BatchOcrController(FileParsingService parser, BatchOcrService batchOcrService) {
         this.parser = parser;
+        this.batchOcrService = batchOcrService;
     }
 
     @Operation(summary = "배치 파일 업로드", description = "Excel, CSV 파일을 업로드하여 파싱 후 RabbitMQ 대기열에 등록합니다.")
@@ -48,7 +52,10 @@ public class BatchOcrController {
             List<String> imageKeys = parser.parseImageKeyFile(file);
             logger.info("성공적으로 파싱된 이미지 키 개수: {} 건", imageKeys.size());
 
-            // 3. TODO: 추출된 키들을 MariaDB에 적재하고 RabbitMQ로 메시지 전송
+            // 초기 작업이력 MariaDB에 저장 Redis에 작업 상태 PENDING으로 등록
+            batchOcrService.saveImageKeys(imageKeys);
+
+            // RabbitMQ에 메시지 발행
             // imageFileService.sendToQueue(imageKeys);
 
             // 처리 결과 DTO 반환

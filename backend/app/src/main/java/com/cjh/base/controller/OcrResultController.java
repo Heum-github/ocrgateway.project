@@ -1,10 +1,11 @@
 package com.cjh.base.controller;
 
-import com.cjh.base.dto.OcrResultDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
+
+import com.cjh.domain.ocr.shared.dto.OcrResultDto;
 
 import java.util.Arrays;
 import java.util.List;
