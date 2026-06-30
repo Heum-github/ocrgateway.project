@@ -7,8 +7,6 @@ import org.springframework.web.multipart.MultipartFile;
 import com.cjh.common.shared.utils.PathUtils;
 import com.cjh.domain.ocr.core.interfaces.FileParsingService;
 
-import ch.qos.logback.core.util.FileUtil;
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
@@ -27,7 +25,6 @@ public class FileParsingServiceImpl implements FileParsingService{
 
         List<String> imageKeys = new ArrayList<>();
 
-        // try-with-resources 구문으로 Stream 안전하게 닫기
         try (BufferedReader reader = new BufferedReader(
                 new InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8))) {
             
