@@ -2,7 +2,6 @@ package com.cjh.base.service;
 
 import com.cjh.base.common.config.RabbitConfig;
 import com.cjh.base.repository.OcrBatchTrgtImagRepository;
-import com.cjh.domain.ocr.shared.entity.OcrBatchTrgtImag;
 import io.minio.GetObjectArgs;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
